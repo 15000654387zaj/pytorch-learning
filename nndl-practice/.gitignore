@@ -1,0 +1,31 @@
+.ipynb_checkpoints
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Notebook runtime artifacts
+pytorch/**/models/
+pytorch/**/checkpoint/
+pytorch/**/tinyshakespeare.txt
+pytorch/**/*.pt
+
+# Local virtualenvs
+.venv/
+venv/
+
+# Datasets（从 practice-in-paddle/dataset 复制；见 pytorch/datasets/README.md，数据不入库）
+pytorch/datasets/cifar-10-batches-py/
+pytorch/datasets/imdb/
+pytorch/datasets/lcqmc/
+pytorch/datasets/bert-base-chinese/
+pytorch/datasets/boston_house_prices.csv
+pytorch/datasets/*.tar.gz
+pytorch/datasets/_*_extract/
+
+# Local notebook migration/runtime scratch
+pytorch/**/scripts/_tmp/
+pytorch/**/data/
