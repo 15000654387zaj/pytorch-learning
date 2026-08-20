@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>七夕浪漫送祝福 · 专属心意即刻传递</title>
+  <meta name="description" content="无需登录，操作简单的七夕节专属祝福生成工具！挑选精致祝福语，生成浪漫拆信封卡片与专属分享链接。">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Animated Starry & Lantern Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="app-container">
+    
+    <!-- Navbar Header -->
+    <header class="navbar">
+      <a href="./" class="brand">
+        <span class="brand-icon">💖</span>
+        <span class="brand-text">七夕·金风玉露</span>
+      </a>
+      <div class="nav-actions">
+        <button id="btnToggleAudio" class="icon-btn" title="开启/关闭七夕浪漫背景音乐">
+          <span>🎵</span>
+          <span>背景音乐：关</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+
+      <!-- SECTION 1: CREATE BLESSING (制作祝福) -->
+      <section id="createSection" class="section-panel active">
+        <div class="editor-wrapper">
+          
+          <!-- Form Input Panel -->
+          <div class="glass-card">
+            <h2 class="section-title">✨ 制作七夕祝福</h2>
+            
+            <div class="form-group">
+              <label class="form-label" for="inputTo">收件人称呼 (To)</label>
+              <input type="text" id="inputTo" class="form-input" placeholder="例如：亲爱的喵喵 / 最特别的你" value="亲爱的你" maxlength="20">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputFrom">寄件人称呼 (From)</label>
+              <input type="text" id="inputFrom" class="form-input" placeholder="例如：某人 / 默默关注你的我" value="一位特别的人" maxlength="20">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inputMsg">祝福文案</label>
+              <textarea id="inputMsg" class="form-textarea" placeholder="写下你想对 TA 说的话..."></textarea>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="preset-tags-label">💡 快速点选经典祝福语：</div>
+            <div id="presetTags" class="preset-tags"></div>
+
+            <!-- Theme Style Picker -->
+            <div class="form-group">
+              <label class="form-label">🎨 挑选卡片主题</label>
+              <div class="theme-options">
+                <div class="theme-pill active" data-theme="starry">星河之恋</div>
+                <div class="theme-pill" data-theme="rose">玫瑰粉夜</div>
+                <div class="theme-pill" data-theme="vintage">古风祈愿</div>
+                <div class="theme-pill" data-theme="aurora">极光浪漫</div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-group">
+              <button id="btnGenerateLink" class="btn-primary">
+                <span>💌</span> 生成专属祝福链接
+              </button>
+              <button id="btnDownloadCard" class="btn-secondary">
+                <span>🖼️</span> 导出图片卡片
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Real-time Preview Panel -->
+          <div class="preview-card-container">
+            <div id="previewFrame" class="card-preview-frame theme-starry">
+              <div>
+                <div class="card-header-ornament">✦ 七夕 · 专属信笺 ✦</div>
+                <div id="previewTo" class="card-to">致 亲爱的你：</div>
+                <div id="previewMsg" class="card-body-text">纤云弄巧，飞星传恨，银汉迢迢暗度。\n金风玉露一相逢，便胜却人间无数。</div>
+              </div>
+              <div>
+                <div id="previewFrom" class="card-from">—— 一位特别的人</div>
+                <div class="card-footer-tag">七夕专属祝福 · 无需登录即开启</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 2: VIEW BLESSING (接收/拆信封查看) -->
+      <section id="viewSection" class="section-panel">
+        <div class="view-container">
+
+          <!-- 3D Envelope -->
+          <div id="envelope" class="envelope-wrapper">
+            <div class="envelope">
+              <div class="envelope-flap"></div>
+              <div id="envelopeSeal" class="envelope-seal" title="点击开启七夕祝福">七夕</div>
+              <div class="envelope-hint">✨ 点击封蜡，开启你的专属七夕祝福 ✨</div>
+            </div>
+          </div>
+
+          <!-- Unfolded Card -->
+          <div id="revealedCard" class="revealed-card">
+            <div id="viewFrame" class="card-preview-frame theme-starry">
+              <div>
+                <div class="card-header-ornament">✦ 七夕 · 专属信笺 ✦</div>
+                <div id="viewTo" class="card-to">致 亲爱的你：</div>
+                <div id="viewMsg" class="card-body-text typewriter-text"></div>
+              </div>
+              <div>
+                <div id="viewFrom" class="card-from">—— 一位特别的人</div>
+                <div class="card-footer-tag">七夕专属祝福 · 心意相随</div>
+              </div>
+            </div>
+
+            <!-- Interactive Actions for Receiver -->
+            <div class="interactive-toolbar">
+              <button id="btnReleaseLantern" class="lantern-btn">
+                <span>🏮</span> 放飞许愿天灯
+              </button>
+              <button id="btnCreateNew" class="btn-secondary">
+                <span>✏️</span> 我也要送祝福
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modal for Link Sharing -->
+    <div id="shareModal" class="modal-overlay">
+      <div class="modal-card">
+        <button id="modalClose" class="modal-close">&times;</button>
+        <h3 class="section-title">🎉 祝福已生成！</h3>
+        <p style="color: var(--text-sub); font-size: 0.95rem;">点击下方按钮复制专属链接，发送给对方即可拆开心意信封：</p>
+        
+        <div class="share-link-box">
+          <input type="text" id="shareLinkInput" class="share-input" readonly>
+          <button id="btnCopyShareLink" class="btn-primary" style="flex: initial; padding: 0.75rem 1.2rem;">
+            一键复制
+          </button>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">
+          提示：任何拿到此链接的人都可以直接打开查看，无需注册登录。
+        </p>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>七夕相伴 · 传递真挚爱意 | 极简免登录 Web 应用</p>
+    </footer>
+
+  </div>
+
+  <script src="js/preset_wishes.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

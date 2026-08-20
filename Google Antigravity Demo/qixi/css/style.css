@@ -1,0 +1,758 @@
+/* ==========================================================================
+   七夕浪漫送祝福网站 - Design System & Modern Responsive Styles
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+  /* Color Tokens */
+  --bg-dark: #090714;
+  --bg-gradient: radial-gradient(circle at 50% 20%, #1c1038 0%, #0d091e 60%, #05040a 100%);
+  --accent-pink: #ff4b8b;
+  --accent-pink-hover: #ff2d75;
+  --accent-gold: #ffd700;
+  --accent-purple: #9d4edd;
+  --accent-cyan: #00f2fe;
+  
+  --glass-bg: rgba(23, 15, 45, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-glow: rgba(255, 75, 139, 0.35);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  
+  --text-main: #f8fafc;
+  --text-sub: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  --font-serif: 'Noto Serif SC', serif;
+  --font-calligraphy: 'Ma Shan Zheng', 'Long Cang', cursive;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fullscreen Background Canvas */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Outer Container */
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
+  z-index: 1;
+}
+
+/* Header Navbar */
+.navbar {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: rgba(15, 10, 30, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--text-main);
+}
+
+.brand-icon {
+  font-size: 1.6rem;
+  animation: heartPulse 2s infinite ease-in-out;
+}
+
+.brand-text {
+  font-family: var(--font-calligraphy);
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #fff 20%, var(--accent-pink) 60%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  transition: var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background: rgba(255, 75, 139, 0.2);
+  border-color: var(--accent-pink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 75, 139, 0.3);
+}
+
+.icon-btn.active {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  border-color: transparent;
+}
+
+/* Main Layout Grid */
+.main-content {
+  width: 100%;
+  max-width: 1000px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sections visibility */
+.section-panel {
+  width: 100%;
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section-panel.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* SECTION 1: CREATE BLESSING (制作祝福卡) */
+.editor-wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 868px) {
+  .editor-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-gold), var(--accent-purple));
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--accent-gold);
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  background: rgba(10, 6, 25, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 15px rgba(255, 75, 139, 0.25);
+  background: rgba(15, 9, 35, 0.8);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 110px;
+  font-family: var(--font-serif);
+  line-height: 1.8;
+}
+
+.preset-tags-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.preset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-sub);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tag-btn:hover {
+  background: rgba(255, 75, 139, 0.15);
+  color: #fff;
+  border-color: var(--accent-pink);
+}
+
+/* Theme selector pills */
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.theme-pill {
+  padding: 0.6rem 0.3rem;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: var(--transition-fast);
+}
+
+.theme-pill.active, .theme-pill:hover {
+  border-color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+/* Preview Card */
+.preview-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-preview-frame {
+  width: 100%;
+  min-height: 380px;
+  border-radius: var(--radius-md);
+  padding: 2.5rem 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-normal);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* Card Theme Styles */
+.theme-starry {
+  background: linear-gradient(135deg, #100b2b 0%, #201047 50%, #0d0324 100%);
+  border-color: rgba(157, 78, 221, 0.4);
+}
+
+.theme-rose {
+  background: linear-gradient(135deg, #2b0b1e 0%, #4a122e 50%, #1a0410 100%);
+  border-color: rgba(255, 75, 139, 0.4);
+}
+
+.theme-vintage {
+  background: linear-gradient(135deg, #2a1f14 0%, #3e2815 50%, #150d06 100%);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.theme-aurora {
+  background: linear-gradient(135deg, #071e2e 0%, #0e3b43 50%, #020e17 100%);
+  border-color: rgba(0, 242, 254, 0.4);
+}
+
+.card-header-ornament {
+  font-family: var(--font-calligraphy);
+  font-size: 1.4rem;
+  color: var(--accent-gold);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.card-to {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-pink);
+  margin-bottom: 1rem;
+}
+
+.card-body-text {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--text-main);
+  white-space: pre-wrap;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.card-from {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  text-align: right;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.card-footer-tag {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1rem;
+}
+
+/* Action Buttons */
+.action-group {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--accent-pink) 0%, #d92662 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 8px 25px rgba(255, 75, 139, 0.4);
+  transition: var(--transition-fast);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(255, 75, 139, 0.6);
+  background: linear-gradient(135deg, #ff5e98 0%, #e61d5b 100%);
+}
+
+.btn-secondary {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.9rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* SECTION 2: VIEW BLESSING (拆信封与互动) */
+.view-container {
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 3D Interactive Envelope */
+.envelope-wrapper {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 480px;
+  height: 300px;
+  margin: 2rem auto;
+  cursor: pointer;
+  position: relative;
+}
+
+.envelope {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #2b1338, #180924);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 75, 139, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 240px solid transparent;
+  border-right: 240px solid transparent;
+  border-top: 160px solid #3c1a4e;
+  transform-origin: top;
+  transition: transform 0.6s ease;
+  z-index: 3;
+}
+
+@media (max-width: 520px) {
+  .envelope-wrapper {
+    height: 240px;
+  }
+  .envelope-flap {
+    border-left-width: 180px;
+    border-right-width: 180px;
+    border-top-width: 120px;
+  }
+}
+
+.envelope-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, #ff4b8b 0%, #b8004f 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(255, 75, 139, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--font-calligraphy);
+  font-size: 1.6rem;
+  z-index: 4;
+  cursor: pointer;
+  animation: pulseGlow 2.5s infinite ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.envelope-seal:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.envelope-hint {
+  position: absolute;
+  bottom: -40px;
+  width: 100%;
+  text-align: center;
+  color: var(--accent-gold);
+  font-size: 0.95rem;
+  font-family: var(--font-serif);
+  animation: bounce 2s infinite;
+}
+
+/* Open Envelope State */
+.envelope.opened .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope.opened .envelope-seal {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Revealed Card Display */
+.revealed-card {
+  display: none;
+  width: 100%;
+  animation: cardFadeIn 0.8s ease forwards;
+}
+
+.typewriter-text {
+  border-right: 2px solid var(--accent-pink);
+  animation: blink 0.75s step-end infinite;
+}
+
+/* Interactive Toolbar */
+.interactive-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Floating Wish Lantern Button */
+.lantern-btn {
+  background: linear-gradient(135deg, #ffb75e 0%, #ed8f03 100%);
+  color: #1a0a00;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 20px rgba(255, 183, 94, 0.4);
+  transition: var(--transition-fast);
+}
+
+.lantern-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(255, 183, 94, 0.6);
+}
+
+/* MODAL SYSTEM */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 3, 12, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 1rem;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-sub);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: rgba(255, 75, 139, 0.3);
+  color: #fff;
+}
+
+.share-link-box {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.2rem 0;
+}
+
+.share-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  color: var(--text-sub);
+  font-size: 0.85rem;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(23, 15, 45, 0.95);
+  border: 1px solid var(--accent-pink);
+  color: var(--text-main);
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: toastIn 0.3s ease forwards;
+}
+
+/* Footer */
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--accent-pink);
+  text-decoration: none;
+}
+
+/* ANIMATIONS */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 4px 15px rgba(255, 75, 139, 0.6); }
+  50% { box-shadow: 0 4px 30px rgba(255, 75, 139, 0.9), 0 0 20px var(--accent-gold); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
